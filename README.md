@@ -1,2 +1,1 @@
-# config
-三种常用的配置中心比较
+# 请查每个module的README.md文件
