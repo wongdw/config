@@ -14,7 +14,7 @@ public class NacosServiceApp {
 
 
     public static void main(String[] args) {
-        SpringApplication.run((NacosServiceApp.class), args);
+        SpringApplication.run(NacosServiceApp.class, args);
     }
 
 
