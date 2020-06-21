@@ -1,6 +1,13 @@
-# nacos的项目介绍
+# apollo的部署和使用
 
 
+
+
+
+
+
+
+# nacos的部署和使用
 
 ## nacos简介
 
@@ -26,7 +33,11 @@ gitihub https://github.com/alibaba/nacos
 
 ## 项目结构
 
+### 项目目录
 ![dir.png](https://github.com/wongdw/config/blob/master/nacos/img/dir.png)
+
+### 项目config文件夹
+![config-dir.png](https://github.com/wongdw/config/blob/master/nacos/img/config-dir.png)
 
 
 
@@ -71,7 +82,7 @@ server.port=8848
 
 
 
-## GUI和使用
+## 客户端使用
 
 [^使用版本号]: stable-1.3.0
 
@@ -81,7 +92,7 @@ server.port=8848
 
 
 
-## GUI首页
+### GUI-首页
 
 ![nacos-homePage](https://github.com/wongdw/config/blob/master/nacos/img/nacos-homePage.png)
 
@@ -93,13 +104,13 @@ server.port=8848
 
 - Group 用于区分不同的微服务名称（也可设置为全局变量组）
 
-- namespace (本图为public) 是命名空间类型数据库的scheme，每个命名空间的变量相互独立，可以自定义添加不同的namespace适应不同的profile
+- namespace (本图为dev) namespace类似关系型数据库的scheme，每个namespace的DataId相互独立，可以自定义添加不同的namespace适应不同的profile
 
   
 
 
 
-## 配置页面详情
+### GUI-配置页面详情
 
 ![config-detail](https://github.com/wongdw/config/blob/master/nacos/img/config-detail.png)
 
@@ -111,7 +122,7 @@ server.port=8848
 
 
 
-## 事务回滚功能
+### GUI-事务回滚功能
 
 ![cvs.png](https://github.com/wongdw/config/blob/master/nacos/img/cvs.png)
 
@@ -120,8 +131,34 @@ server.port=8848
 此外nacos还支持权限控制和多集群实现高可用
 
 
-# 项目整合
-nacos与spring整合非常容易，这是boottstarp
+### GUI-权限控制
+
+![permission1.png](https://github.com/wongdw/config/blob/master/nacos/img/permission1.png)
+
+![permission2.png](https://github.com/wongdw/config/blob/master/nacos/img/permission2.png)
+
+可以看到naocs支持 `Role Base Access control` 和 `Resource Base Access control`，权限管理比较细粒度，在权限方面管控的比较好。
+
+
+### open-api
+nacos除了提供GUI，jar包，还提供了open-api，可以使用open-api完成自动化部署。
+
+下面列举几个比较常用的api，具体参照官方文档
+```shell script
+#获取配置使用GET请求，两个参数分别为dataId和group
+curl -X GET "http://localhost:8848/nacos/v1/cs/configs?dataId=microservice-1.properties&group=dev"
+
+#新增配置使用POST请求
+curl -X POST "http://localhost:8848/nacos/v1/cs/configs?dataId=microservice-1.properties&group=dev"
+```
+
+
+
+
+## 项目整合
+
+### 配置文件
+nacos与spring整合非常容易，这是`bootstrap.properties`
 
 ```properties
 # 该文件早于 application.properties的加载，需要依赖spring-cloud
@@ -157,11 +194,11 @@ spring.cloud.nacos.config.shared-configs[0].data-id=slf4j.properties
 spring.cloud.nacos.config.shared-configs[0].group=SHARE_GROUP
 spring.cloud.nacos.config.shared-configs[0].refresh=true
 
-
 ```
+### 代码几乎不需要进行特殊的迁移（只需要添加 `@RefreshScope`注解即可 ）
 
 ```java
-package priv.wdw.nacos;
+package priv.wdw.config.nacos.service1;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -173,26 +210,40 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>@date 2020/6/20 20:58</p>
  * <p>@description </p>
  */
+
 @RestController
-@RefreshScope  //加上此注解才可以自动更新
-public class NacosDemo {
+@RefreshScope  //加上此注解 @Value才可以自动更新（系统的配置文件不需要此注解）
+public class NacosService1TestController {
+
+    /**
+     * 主配置文件 （microService1.properties）
+     */
+    @Value("${service1.key:null}")
+    private String val;
 
 
-    @Value(value = "${username}")
-    private volatile String username;
+    /**
+     * 定义在拓展配置文件（microService1-db.properties）
+     */
+    @Value("${jdbc.url:null}")
+    private String jdbcUrl;
 
 
-    @Value(value = "${jdbc.url}")
-    private volatile String jdbcUrl;
+    @GetMapping("/getVal")
+    public String getVal() {
+        return System.currentTimeMillis() + "-->" + this.val;
+    }
 
 
-    @GetMapping("/printVal")
-    public String printVal() {
-        return "username = " + username + '\n' + "jdbc.url = " + jdbcUrl;
+    @GetMapping("/jdbcUrl")
+    public String getJdbcUrl() {
+        return System.currentTimeMillis() + "-->" + this.jdbcUrl;
+
     }
 
 
 }
+
 ```
 
-演示结果查看子模块nacos-config
+**具体的deme参照项目当中的nacos-service1和nacos-service2**
