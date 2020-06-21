@@ -26,7 +26,7 @@ gitihub https://github.com/alibaba/nacos
 
 ## 项目结构
 
-![dir.png](https://github.com/wongdw/config/blob/master/nacos-service/img/dir.png)
+![dir.png](https://github.com/wongdw/config/blob/master/nacos/img/dir.png)
 
 
 
@@ -83,7 +83,7 @@ server.port=8848
 
 ## GUI首页
 
-![nacos-homePage](https://github.com/wongdw/config/blob/master/nacos-service/img/nacos-homePage.png)
+![nacos-homePage](https://github.com/wongdw/config/blob/master/nacos/img/nacos-homePage.png)
 
 我创建了几种比较具有代表性的配置项
 
@@ -101,7 +101,7 @@ server.port=8848
 
 ## 配置页面详情
 
-![config-detail](https://github.com/wongdw/config/blob/master/nacos-service/img/config-detail.png)
+![config-detail](https://github.com/wongdw/config/blob/master/nacos/img/config-detail.png)
 
 
 
@@ -113,7 +113,7 @@ server.port=8848
 
 ## 事务回滚功能
 
-![cvs.png](https://github.com/wongdw/config/blob/master/nacos-service/img/cvs.png)
+![cvs.png](https://github.com/wongdw/config/blob/master/nacos/img/cvs.png)
 
 可以根据不同的版本号设置回滚
 
