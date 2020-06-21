@@ -121,30 +121,42 @@ server.port=8848
 
 
 # 项目整合
-nacos与spring整合非常容易
+nacos与spring整合非常容易，这是boottstarp
 
 ```properties
+# 该文件早于 application.properties的加载，需要依赖spring-cloud
 
-# bootstrap.properties
-# 该文件早于 application.properties的的加载，需要依赖spring-cloud
-spring.application.name=microservice-1
-
-#nacos的账号密码
+#nacos的账号密码（配置中心在本机不需要配置该项）
 spring.cloud.nacos.username=nacos
 spring.cloud.nacos.password=nacos
 
+#配置中心url（可以有多个配置中心，用逗号间隔）
+spring.cloud.nacos.config.server-addr=172.29.74.15:8848
 #命名空间
 spring.cloud.nacos.config.namespace=598cd529-6782-48c0-91b8-88dae6754b8f
-spring.cloud.nacos.config.server-addr=172.24.101.127:8848
-
-#主文件的配置名称为 application-name
-spring.cloud.nacos.config.file-extension=properties
-#配置项的命名空间
+#命名组
 spring.cloud.nacos.config.group=microservice-1
 
+
+# 配置文件优先级 共享配置文件<扩展配置文件<主配置文件
+
+#1、主配置文件，文件名为 ${prefix}-$[profile].${file-extension}，
+#在此配置中心的GUI里面，该服务的主配置文件为 microservice-1.properties，prefix 默认为 spring.application.name 的值，也可以通过配置项 spring.cloud.nacos.config.prefix来配置
+spring.cloud.nacos.config.prefix=microservice-1
+spring.cloud.nacos.config.file-extension=properties
+
+
+#2、扩展配置文件本服务有一个在GUI里有一个 “microservice-1-db.properties” 扩展配置文件
 spring.cloud.nacos.config.extension-configs[0].data-id=microservice-1-db.properties
 spring.cloud.nacos.config.extension-configs[0].group=microservice-1
 spring.cloud.nacos.config.extension-configs[0].refresh=true
+
+
+#3、共享配置文件
+spring.cloud.nacos.config.shared-configs[0].data-id=slf4j.properties
+spring.cloud.nacos.config.shared-configs[0].group=SHARE_GROUP
+spring.cloud.nacos.config.shared-configs[0].refresh=true
+
 
 ```
 

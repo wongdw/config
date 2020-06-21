@@ -1,4 +1,4 @@
-package priv.wdw.nacos;
+package priv.wdw.config.nacos.service1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,11 +10,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
-public class NacosServiceApp {
+public class NacosService1App {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(NacosServiceApp.class, args);
+        SpringApplication.run(NacosService1App.class, args);
     }
 
 

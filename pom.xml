@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>nacos-service</module>
-        <module>apollo-service</module>
+        <module>nacos</module>
+        <module>apollo</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
