@@ -80,6 +80,12 @@ server.port=8848
 # db.password=nacos
 ```
 
+### 单机启动
+
+```shell script
+/bin/bash ${nacos_home}/bin/startup.sh start -m standalone
+```
+
 
 
 ## 客户端使用
@@ -94,9 +100,7 @@ server.port=8848
 
 ### GUI-首页
 
-![nacos-homePage](https://github.com/wongdw/config/blob/master/nacos/img/nacos-homePage.png)
-
-我创建了几种比较具有代表性的配置项
+![nacos-homePage](https://github.com/wongdw/config/blob/master/nacos/img/nacos-home-page.png)
 
 - Data Id 全局唯一的配置名称 
 
@@ -106,19 +110,25 @@ server.port=8848
 
 - namespace (本图为dev) namespace类似关系型数据库的scheme，每个namespace的DataId相互独立，可以自定义添加不同的namespace适应不同的profile
 
-  
+我创建了几种比较具有代表性的配置项
 
+`microservice-1.properties`为第一个微服务的主配置文件
+`microservice-2.properties`为第二个微服务的主配置文件
+`microservice-1-extend.properties`为扩展配置文件（properties格式）
+`microservice-1-extendJson.json`为扩展配置文件（json格式）
 
 
 ### GUI-配置页面详情
 
-![config-detail](https://github.com/wongdw/config/blob/master/nacos/img/config-detail.png)
-
-
-
 可以看到 nacos支持 text、json、xml、yaml、html、properties多种格式的配置文件
 
 新版本的nacos支持灰度发布（beta发布）
+
+#### properties格式的配置文件
+![config-detail-properties](https://github.com/wongdw/config/blob/master/nacos/img/config-detail-properties.png)
+
+#### json格式的配置文件
+![config-detail-json](https://github.com/wongdw/config/blob/master/nacos/img/config-detail-json.png)
 
 
 
@@ -168,7 +178,7 @@ spring.cloud.nacos.username=nacos
 spring.cloud.nacos.password=nacos
 
 #配置中心url（可以有多个配置中心，用逗号间隔）
-spring.cloud.nacos.config.server-addr=172.29.74.15:8848
+spring.cloud.nacos.config.server-addr=172.29.126.69:8848
 #命名空间
 spring.cloud.nacos.config.namespace=598cd529-6782-48c0-91b8-88dae6754b8f
 #命名组
@@ -183,10 +193,16 @@ spring.cloud.nacos.config.prefix=microservice-1
 spring.cloud.nacos.config.file-extension=properties
 
 
-#2、扩展配置文件本服务有一个在GUI里有一个 “microservice-1-db.properties” 扩展配置文件
-spring.cloud.nacos.config.extension-configs[0].data-id=microservice-1-db.properties
+#2.1、扩展配置文件本服务有一个在GUI里有一个 “microservice-1-db.properties” 扩展配置文件
+spring.cloud.nacos.config.extension-configs[0].data-id=microservice1-extend.properties
 spring.cloud.nacos.config.extension-configs[0].group=microservice-1
 spring.cloud.nacos.config.extension-configs[0].refresh=true
+
+
+# 2.2、json格式的拓展配置文件
+spring.cloud.nacos.config.extension-configs[1].data-id=microservice1-extendJson.json
+spring.cloud.nacos.config.extension-configs[1].group=microservice-1
+spring.cloud.nacos.config.extension-configs[1].refresh=true
 
 
 #3、共享配置文件
@@ -195,6 +211,8 @@ spring.cloud.nacos.config.shared-configs[0].group=SHARE_GROUP
 spring.cloud.nacos.config.shared-configs[0].refresh=true
 
 ```
+
+
 ### 代码几乎不需要进行特殊的迁移（只需要添加 `@RefreshScope`注解即可 ）
 
 ```java
@@ -216,34 +234,43 @@ import org.springframework.web.bind.annotation.RestController;
 public class NacosService1TestController {
 
     /**
-     * 主配置文件 （microService1.properties）
+     * 主配置文件 （microservice1.properties）
      */
     @Value("${service1.key:null}")
     private String val;
 
 
     /**
-     * 定义在拓展配置文件（microService1-db.properties）
+     * 拓展配置properties格式文件（microservice1-extend.properties）
      */
-    @Value("${jdbc.url:null}")
-    private String jdbcUrl;
+    @Value("${service1.extendKey:null}")
+    private String extendKey;
 
 
-    @GetMapping("/getVal")
-    public String getVal() {
+    /**
+     * 拓展配置json格式文件（microservice1-extend.json）
+     */
+    @Value("${service1.extendJsonKey:null}")
+    private String extendJsonKey;
+
+
+    @GetMapping("/key")
+    public String getKey() {
         return System.currentTimeMillis() + "-->" + this.val;
     }
 
 
-    @GetMapping("/jdbcUrl")
-    public String getJdbcUrl() {
-        return System.currentTimeMillis() + "-->" + this.jdbcUrl;
-
+    @GetMapping("/extendKey")
+    public String getExtendKey() {
+        return System.currentTimeMillis() + "-->" + this.extendKey;
     }
 
 
+    @GetMapping("/extendJsonKey")
+    public String getExtendJsonKey(){
+        return System.currentTimeMillis() + "-->" + this.extendJsonKey;
+    }
 }
-
 ```
 
 **具体的deme参照项目当中的nacos-service1和nacos-service2**

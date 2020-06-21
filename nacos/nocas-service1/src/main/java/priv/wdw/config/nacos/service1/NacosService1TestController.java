@@ -16,30 +16,40 @@ import org.springframework.web.bind.annotation.RestController;
 public class NacosService1TestController {
 
     /**
-     * 主配置文件 （microService1.properties）
+     * 主配置文件 （microservice1.properties）
      */
     @Value("${service1.key:null}")
     private String val;
 
 
     /**
-     * 定义在拓展配置文件（microService1-db.properties）
+     * 拓展配置properties格式文件（microservice1-extend.properties）
      */
-    @Value("${jdbc.url:null}")
-    private String jdbcUrl;
+    @Value("${service1.extendKey:null}")
+    private String extendKey;
 
 
-    @GetMapping("/getVal")
-    public String getVal() {
+    /**
+     * 拓展配置json格式文件（microservice1-extend.json）
+     */
+    @Value("${service1.extendJsonKey:null}")
+    private String extendJsonKey;
+
+
+    @GetMapping("/key")
+    public String getKey() {
         return System.currentTimeMillis() + "-->" + this.val;
     }
 
 
-    @GetMapping("/jdbcUrl")
-    public String getJdbcUrl() {
-        return System.currentTimeMillis() + "-->" + this.jdbcUrl;
-
+    @GetMapping("/extendKey")
+    public String getExtendKey() {
+        return System.currentTimeMillis() + "-->" + this.extendKey;
     }
 
 
+    @GetMapping("/extendJsonKey")
+    public String getExtendJsonKey(){
+        return System.currentTimeMillis() + "-->" + this.extendJsonKey;
+    }
 }
