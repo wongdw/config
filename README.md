@@ -1,11 +1,10 @@
 # apollo的部署和使用
 
 
-
-
-
-
-
+<br/>
+<br/>
+<br/>
+<br/>
 
 # nacos的部署和使用
 
@@ -29,7 +28,7 @@ gitihub https://github.com/alibaba/nacos
 
 [^alibaba-cloud]: 是阿里对spring-cloud框架的实现，和常用的netfix的实现有所不同
 
-
+<br/>
 
 ## 项目结构
 
@@ -86,9 +85,10 @@ server.port=8848
 /bin/bash ${nacos_home}/bin/startup.sh start -m standalone
 ```
 
+<br/>
 
 
-## 客户端使用
+## GUI使用
 
 [^使用版本号]: stable-1.3.0
 
@@ -98,17 +98,17 @@ server.port=8848
 
 
 
-### GUI-首页
+### 首页
 
 ![nacos-homePage](https://github.com/wongdw/config/blob/master/nacos/img/nacos-home-page.png)
 
-- Data Id 全局唯一的配置名称 
+- namespace (本图为dev) namespace类似关系型数据库的scheme，每个namespace的DataId相互独立，可以自定义添加不同的namespace适应不同的profile
 
-  - 默认DataId生成规则  spring.application.name-[spring.profiles.active].{$file-extension}
+- Data_Id 配置文件名（唯一）
+
+  - 默认DataId生成规则  spring.application.name-\[spring.profiles.active\].${file-extension}
 
 - Group 用于区分不同的微服务名称（也可设置为全局变量组）
-
-- namespace (本图为dev) namespace类似关系型数据库的scheme，每个namespace的DataId相互独立，可以自定义添加不同的namespace适应不同的profile
 
 我创建了几种比较具有代表性的配置项
 
@@ -118,7 +118,7 @@ server.port=8848
 `microservice-1-extendJson.json`为扩展配置文件（json格式）
 
 
-### GUI-配置页面详情
+### 配置页面详情
 
 可以看到 nacos支持 text、json、xml、yaml、html、properties多种格式的配置文件
 
@@ -132,7 +132,7 @@ server.port=8848
 
 
 
-### GUI-事务回滚功能
+### 事务回滚功能
 
 ![cvs.png](https://github.com/wongdw/config/blob/master/nacos/img/cvs.png)
 
@@ -141,7 +141,7 @@ server.port=8848
 此外nacos还支持权限控制和多集群实现高可用
 
 
-### GUI-权限控制
+### 权限控制
 
 ![permission1.png](https://github.com/wongdw/config/blob/master/nacos/img/permission1.png)
 
@@ -150,7 +150,9 @@ server.port=8848
 可以看到naocs支持 `Role Base Access control` 和 `Resource Base Access control`，权限管理比较细粒度，在权限方面管控的比较好。
 
 
-### open-api
+<br/>
+
+## open-api
 nacos除了提供GUI，jar包，还提供了open-api，可以使用open-api完成自动化部署。
 
 下面列举几个比较常用的api，具体参照官方文档
@@ -163,6 +165,7 @@ curl -X POST "http://localhost:8848/nacos/v1/cs/configs?dataId=microservice-1.pr
 ```
 
 
+<br/>
 
 
 ## 项目整合
